@@ -1,72 +1,38 @@
 <?php
+namespace App\Controllers\AuthControllers;
 
-namespace App\Controllers;
-
+use App\Storage\StorageInterface;
 use App\Models\User;
-use App\Storage\FileStorage;
 
-class AuthController{
-
+class AuthController {
     private $storage;
 
-    public function __construct()
-    {
-        $this->storage = new FileStorage;
+    public function __construct(StorageInterface $storage) {
+        $this->storage = $storage;
     }
 
-    public function register(){
+    public function register($name, $email, $password) {
+        $user = new User(uniqid(), $name, $email, $password);
+        $this->storage->saveUser($user);
+        echo "Registration successful!";
+    }
 
-        session_start();
-
-        if($_SERVER["REQUEST_METHOD"] == "POST"){
-            $user = new User($this->storage, $_POST['username'], $_POST['password'], $_POST['role']);
-
-            if($user->register()){
-                echo "Successfull Registration";
-            }else{
-                echo "Registration failed! Username already exists";
-            }
+    public function login($email, $password) {
+        $user = $this->storage->getUserByEmail($email);
+        if ($user && $user->password === $password) {
+            session_start();
+            $_SESSION['user_id'] = $user->id;
+            $_SESSION['role'] = $user->role;
+            header("Location: /App/Views/Customer/dashboard.php");
+        } else {
+            echo "Invalid email or password";
         }
-        // include './App/Views/Auth/';
-        include './App/Views/Auth/register.php';
     }
 
-    // public function dashboard(){
-    //     session_start();
-
-    //     if(!isset($_SESSION['username'])){
-    //         header("Location: login.php");
-    //         exit();
-    //     }
-
-    //     include './App/Views/Auth/Dashboard.php';
-    // }
-
-    public function login() {
+    public function logout() {
         session_start();
-
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $user = new User($this->storage, $_POST['username'], $_POST['password']);
-
-            if ($user->login()) {
-                $_SESSION['username'] = $user->username;
-                $_SESSION['role'] = $user->role;
-                header("Location: ../App/Views/Customer/dashboard.php");
-            } else {
-                echo "Login failed!";
-            }
-        }
-
-        include '../App/Views/Auth/login.php';
-    }
-
-    public function logout(){
-
-        session_start();
-        session_unset();
         session_destroy();
-        // header("Location: login.php");
-        header("Location: ./Public/login.php");
-        exit();
+        header("Location: /Public/login.php");
     }
 }
+?>

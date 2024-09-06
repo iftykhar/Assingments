@@ -1,35 +1,19 @@
-<?php
-
-require_once './Vendor/autoload.php';
-
-use App\Controllers\AuthController;
-
-$controller = new AuthController;
-$controller->register();
-
-?>
 <!DOCTYPE html>
-<html
-  class="h-full bg-white"
-  lang="en">
+<html class="h-full bg-white" lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       rel="preconnect"
       href="https://fonts.gstatic.com"
-      crossorigin />
+      crossorigin
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
-      rel="stylesheet" />
-
+      rel="stylesheet"
+    />
     <style>
       * {
         font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
@@ -37,24 +21,26 @@ $controller->register();
           'Helvetica Neue', sans-serif;
       }
     </style>
-
     <title>Create A New Account</title>
   </head>
   <body class="h-full bg-slate-100">
     <div class="flex flex-col justify-center min-h-full py-12 sm:px-6 lg:px-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-md">
         <h2
-          class="mt-6 text-2xl font-bold leading-9 tracking-tight text-center text-gray-900">
+          class="mt-6 text-2xl font-bold leading-9 tracking-tight text-center text-gray-900"
+        >
           Create A New Account
         </h2>
       </div>
 
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
         <div class="px-6 py-12 bg-white shadow sm:rounded-lg sm:px-12">
+          <!-- Action should point to the register controller -->
           <form
             class="space-y-6"
-            action="register.php"
-            method="POST">
+            action="/register"
+            method="POST"
+          >
             <div>
               <label
                 for="name"
@@ -67,7 +53,8 @@ $controller->register();
                   name="name"
                   type="text"
                   required
-                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6 p-2" />
+                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6 p-2"
+                />
               </div>
             </div>
 
@@ -84,7 +71,8 @@ $controller->register();
                   type="email"
                   autocomplete="email"
                   required
-                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6 p-2" />
+                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6 p-2"
+                />
               </div>
             </div>
 
@@ -101,14 +89,16 @@ $controller->register();
                   type="password"
                   autocomplete="current-password"
                   required
-                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6 p-2" />
+                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6 p-2"
+                />
               </div>
             </div>
 
             <div>
               <button
                 type="submit"
-                class="flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600">
+                class="flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
+              >
                 Register
               </button>
             </div>
@@ -118,7 +108,7 @@ $controller->register();
         <p class="mt-10 text-sm text-center text-gray-500">
           Already a customer?
           <a
-            href="./login.html"
+            href="/login"
             class="font-semibold leading-6 text-emerald-600 hover:text-emerald-500"
             >Sign-in</a
           >

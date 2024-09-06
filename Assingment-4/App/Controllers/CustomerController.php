@@ -1,33 +1,18 @@
 <?php
+namespace App\Controllers\CustomerControllers;
 
-namespace App\Controllers;
-
-use App\Models\User;
 use App\Storage\StorageInterface;
-use App\Storage\FileStorage;
+use App\Models\Transaction;
 
-class CustomerController
-{
-    protected $storage;
+class CustomerController {
+    private $storage;
 
-    public function __construct(StorageInterface $storage)
-    {
+    public function __construct(StorageInterface $storage) {
         $this->storage = $storage;
-    }
-
-    private function checkSession()
-    {
-        session_start();
-        if (!isset($_SESSION['username']) || !isset($_SESSION['user_id'])) {
-            header("Location: ../../Public/login.php");
-            exit();
-        }
     }
 
     public function dashboard($userId)
     {
-        $this->checkSession();
-
         // Fetch user data
         $user = $this->storage->getUserById($userId);
         if (!$user) {
@@ -44,36 +29,59 @@ class CustomerController
         ]);
     }
 
-    public function deposit($userId)
-    {
-        $this->checkSession();
-
-        // Additional logic for deposit can go here
-
-        return view('Customer/deposit', [
-            'user' => $this->storage->getUserById($userId),
-        ]);
+    public function deposit($userId, $amount) {
+        $user = $this->storage->getUserById($userId);
+        if ($user) {
+            $user->balance += $amount;
+            $this->storage->saveUser($user);
+            $transaction = new Transaction(uniqid(), $userId, 'deposit', $amount, date('Y-m-d H:i:s'));
+            $this->storage->saveTransaction($transaction);
+            echo "Deposit successful!";
+        } else {
+            echo "User not found!";
+        }
     }
 
-    public function transfer($userId)
-    {
-        $this->checkSession();
-
-        // Additional logic for transfer can go here
-
-        return view('Customer/transfer', [
-            'user' => $this->storage->getUserById($userId),
-        ]);
+    public function withdraw($userId, $amount) {
+        $user = $this->storage->getUserById($userId);
+        if ($user && $user->balance >= $amount) {
+            $user->balance -= $amount;
+            $this->storage->saveUser($user);
+            $transaction = new Transaction(uniqid(), $userId, 'withdraw', $amount, date('Y-m-d H:i:s'));
+            $this->storage->saveTransaction($transaction);
+            echo "Withdrawal successful!";
+        } else {
+            echo "Insufficient balance or user not found!";
+        }
     }
 
-    public function withdraw($userId)
-    {
-        $this->checkSession();
+    public function transfer($fromUserId, $toUserEmail, $amount) {
+        $fromUser = $this->storage->getUserById($fromUserId);
+        $toUser = $this->storage->getUserByEmail($toUserEmail);
+        if ($fromUser && $toUser && $fromUser->balance >= $amount) {
+            $fromUser->balance -= $amount;
+            $toUser->balance += $amount;
+            $this->storage->saveUser($fromUser);
+            $this->storage->saveUser($toUser);
+            $transaction = new Transaction(uniqid(), $fromUserId, 'transfer', $amount, date('Y-m-d H:i:s'));
+            $this->storage->saveTransaction($transaction);
+            echo "Transfer successful!";
+        } else {
+            echo "Transfer failed! Insufficient balance or user not found!";
+        }
+    }
 
-        // Additional logic for withdraw can go here
+    public function viewTransactions($userId) {
+        $transactions = $this->storage->getTransactionsByUserId($userId);
+        return $transactions;
+    }
 
-        return view('Customer/withdraw', [
-            'user' => $this->storage->getUserById($userId),
-        ]);
+    public function viewBalance($userId) {
+        $user = $this->storage->getUserById($userId);
+        if ($user) {
+            return $user->balance;
+        }
+        return 0;
     }
 }
+?>

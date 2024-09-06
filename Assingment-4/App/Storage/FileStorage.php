@@ -1,49 +1,76 @@
 <?php
-
 namespace App\Storage;
 
-class FileStorage implements StorageInterface{
+use App\Models\User;
+use App\Models\Transaction;
 
-    private $storage_dir = '../Data/Users';
+class FileStorage implements StorageInterface {
+    private $userFile = __DIR__ . '/../../Data/Users/users.txt';
+    private $transactionFile = __DIR__ . '/../../Data/Transactions/transactions.txt';
 
-    public function __construct()
-    {
-        if(!file_exists($this->storage_dir)){
-            mkdir($this->storage_dir, 0777, true);
+    public function saveUser(User $user) {
+        $data = json_encode($user) . PHP_EOL;
+        file_put_contents($this->userFile, $data, FILE_APPEND);
+    }
+
+    public function getUserById($id) {
+        return $this->findUser(function($user) use ($id) {
+            return $user->id == $id;
+        });
+    }
+
+    public function getUserByEmail($email) {
+        return $this->findUser(function($user) use ($email) {
+            return $user->email == $email;
+        });
+    }
+
+    public function getAllUsers() {
+        return $this->getUsers();
+    }
+
+    public function saveTransaction(Transaction $transaction) {
+        $data = json_encode($transaction) . PHP_EOL;
+        file_put_contents($this->transactionFile, $data, FILE_APPEND);
+    }
+
+    public function getTransactionsByUserId($userId) {
+        return $this->findTransactions(function($transaction) use ($userId) {
+            return $transaction->userId == $userId;
+        });
+    }
+
+    public function getAllTransactions() {
+        return $this->getTransactions();
+    }
+
+    private function findUser($callback) {
+        $users = $this->getUsers();
+        foreach ($users as $user) {
+            if ($callback($user)) {
+                return $user;
+            }
         }
+        return null;
     }
 
-    private function getUserFilePath($username){
-        return $this->storage_dir.$username.'.txt';
+    private function getUsers() {
+        $users = file($this->userFile, FILE_IGNORE_NEW_LINES);
+        return array_map(function($user) {
+            return json_decode($user);
+        }, $users);
     }
 
-    public function userExists($username)
-    {
-        return file_exists($this->getUserFilePath($username));
+    private function findTransactions($callback) {
+        $transactions = $this->getTransactions();
+        return array_filter($transactions, $callback);
     }
 
-    public function saveUser($username, $password, $role)
-    {
-        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-        $user_data = $username . "\n" . $hashed_password . "\n" . $role;
-
-        file_put_contents($this->getUserFilePath($username), $user_data);
+    private function getTransactions() {
+        $transactions = file($this->transactionFile, FILE_IGNORE_NEW_LINES);
+        return array_map(function($transaction) {
+            return json_decode($transaction);
+        }, $transactions);
     }
-
-    public function getUser($username){
-        if($this->userExists($username)){
-            return null;
-        }
-
-        $user_data = file($this->getUserFilePath($username), FILE_IGNORE_NEW_LINES);
-        return [
-            'username' => $user_data[0],
-            'password' => $user_data[1],
-            'role' => $user_data[2]
-        ];
-    }
-
 }
-
-
 ?>
