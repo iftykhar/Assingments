@@ -21,7 +21,7 @@ class CustomerController {
         }
 
         // Fetch user transactions
-        $transactions = $this->storage->getUserTransactions($userId);
+        $transactions = $this->storage->getTransactionsByUserId($userId);
 
         // Return view with data (using include if you're not using a templating engine)
         return include 'path/to/views/Customer/dashboard.php';

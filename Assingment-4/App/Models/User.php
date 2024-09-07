@@ -9,7 +9,7 @@ class User {
     public $balance;
     public $role; // 'admin' and 'customer'
 
-    public function __construct($id, $name, $email, $password, $balance = 0, $role = 'customer') {
+    public function __construct($id, $name, $email, $password, $balance = 0.0, $role = 'customer') {
         $this->id = $id;
         $this->name = $name;
         $this->email = $email;
