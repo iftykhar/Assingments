@@ -23,8 +23,12 @@ class CustomerController {
         // Fetch user transactions
         $transactions = $this->storage->getTransactionsByUserId($userId);
 
-        // Return view with data (using include if you're not using a templating engine)
-        return include 'path/to/views/Customer/dashboard.php';
+        
+        // Extract data to pass to the view
+        // Using a closure to include the view with variables
+        return (function() use ($user, $transactions) {
+            include 'customer/dashboard.php';
+        })();;
     }
 
     // Deposit money into user account
