@@ -1,0 +1,23 @@
+[
+    {
+        "id":1,
+        "title":"dictator-portfolio",
+        "description":"A short Static view of website about Dictator",
+        "link":"https://iftykhar.github.io/dictator-portfolio/",
+        "pic":"assets/project1.jpeg"
+    },
+    {
+        "id":2,
+        "title":"calculator",
+        "description":"A Calculator by j-query",
+        "link":"https://iftykhar.github.io/calculator/",
+        "pic":"assets/project2.jpeg"
+    },
+    {
+        "id":3,
+        "title":"Html-work",
+        "description":"A project based on HTML and CSS from a PSD",
+        "link":"https://iftykhar.github.io/Html-work/",
+        "pic":"assets/project3.jpeg"
+    }
+]
