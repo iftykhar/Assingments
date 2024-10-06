@@ -30,7 +30,7 @@ Route::get('/profile',function(){
 //     return view('register');
 // });
 Route::get('register',[AuthController::class,'showregister'])->name('register');
-Route::post('register',[AuthController::class,'register']);
+Route::post('register',[AuthController::class,'register']) ;
 Route::get('edit-profile',function(){
     return view('edit-profile');
 });
