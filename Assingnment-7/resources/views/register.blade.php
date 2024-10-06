@@ -40,7 +40,7 @@
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form
           class="space-y-6"
-          action="#"
+          action="{{ route('register') }}"
           method="POST">
           <!-- Name -->
           <div>
@@ -106,6 +106,7 @@
               class="block text-sm font-medium leading-6 text-gray-900"
               >Password</label
             >
+            @csrf
             <div class="mt-2">
               <input
                 id="password"
